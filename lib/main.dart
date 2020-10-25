@@ -1,36 +1,52 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:sam_driver_app/ui/pages/intro.dart';
+import 'package:sam_driver_app/ui/pages/login.dart';
+import 'package:sam_driver_app/ui/pages/privacy.dart';
+import 'package:sam_driver_app/ui/pages/register.dart';
+import 'package:sam_driver_app/ui/pages/termsofservice.dart';
+import 'package:sam_driver_app/ui/pages/welcome.dart';
 
-import 'ui/account.dart';
-import 'ui/earnings.dart';
-import 'ui/earnings_details.dart';
-import 'ui/home.dart';
-import 'ui/notifications.dart';
-import 'ui/profile.dart';
-import 'ui/promotions.dart';
-import 'ui/recent_transactions.dart';
+import 'blocs/auth_bloc.dart';
+import 'ui/pages/home.dart';
+import 'ui/pages/profile.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp(
+      AuthBloc(),
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'SAM Rider',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: './',
+        routes: {
+          '/home': (context) => MyHomePage(),
+          '/': (context) => WelcomePage(),
+          '/intro': (context) => IntroPage(),
+          '/login': (context) => LoginPage(),
+          '/signup': (context) => RegisterPage(),
+          '/profile': (context) => ProfilePage(),
+          '/privacy': (context) => PrivacyPage(),
+          '/termsofservice': (context) => TermsOfServicePage(),
+        },
+      )));
+}
 
-class MyApp extends StatelessWidget {
+class MyApp extends InheritedWidget {
+  final AuthBloc authBloc;
+  final Widget child;
+  MyApp(this.authBloc, this.child) : super(child: child);
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Uber Clone',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => MyHomePage(title: 'Uber Clone'),
-        '/notifications': (context) => NotificationsPage(),
-        '/earnings': (context) => EarningsPage(),
-        '/profile': (context) => ProfilePage(),
-        '/earnings_details': (context) => EarningsDetailsPage(),
-        '/recent_transations': (context) => RecentTransactionsPage(),
-        '/promotions': (context) => PromotionsPage(),
-        '/account': (context) => AccountPage(),
-      },
-    );
+  bool updateShouldNotify(InheritedWidget oldWidget) {
+    return false;
+  }
+
+  static MyApp of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<MyApp>();
   }
 }

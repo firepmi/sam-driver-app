@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "978311598679",
+    "firebase_url": "https://samwilldoit-cdd44.firebaseio.com",
+    "project_id": "samwilldoit-cdd44",
+    "storage_bucket": "samwilldoit-cdd44.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978311598679:android:74303ae3a2100510d4c912",
+        "android_client_info": {
+          "package_name": "com.maniaco.sam_driver_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "978311598679-tis4utjmfv9mqd744fqf7s6mguv439je.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD76oY_YH1lS_uVwiwwW2sN8irtWupEv6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978311598679-tis4utjmfv9mqd744fqf7s6mguv439je.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "978311598679-m4qha312nv1rnpg4rq24gjv40dfefh3l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.maniaco.samDriverApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978311598679:android:bfc2d75d4539e4d2d4c912",
+        "android_client_info": {
+          "package_name": "com.maniaco.sam_rider_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "978311598679-vppslabenatire1au99u4sd6p8ha9ve5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maniaco.sam_rider_app",
+            "certificate_hash": "a1659fe0f8db520a438a068d4fa21855a5b78678"
+          }
+        },
+        {
+          "client_id": "978311598679-tis4utjmfv9mqd744fqf7s6mguv439je.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD76oY_YH1lS_uVwiwwW2sN8irtWupEv6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978311598679-tis4utjmfv9mqd744fqf7s6mguv439je.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "978311598679-m4qha312nv1rnpg4rq24gjv40dfefh3l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.maniaco.samDriverApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>132928962247-p986mb7hugm64pvb4op67g8i74odcker.apps.googleusercontent.com</string>
+	<string>978311598679-m4qha312nv1rnpg4rq24gjv40dfefh3l.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.132928962247-p986mb7hugm64pvb4op67g8i74odcker</string>
+	<string>com.googleusercontent.apps.978311598679-m4qha312nv1rnpg4rq24gjv40dfefh3l</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>978311598679-vppslabenatire1au99u4sd6p8ha9ve5.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDMklJjwW56fbZ9r_FWXFjrfvSslO52uAw</string>
+	<string>AIzaSyDl3WV50DkvLjn0ffs1qzfY4WxWSxpnp1o</string>
 	<key>GCM_SENDER_ID</key>
-	<string>132928962247</string>
+	<string>978311598679</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.maniaco.samDriverApp</string>
 	<key>PROJECT_ID</key>
-	<string>samwilldoit</string>
+	<string>samwilldoit-cdd44</string>
 	<key>STORAGE_BUCKET</key>
-	<string>samwilldoit.appspot.com</string>
+	<string>samwilldoit-cdd44.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:132928962247:ios:d0d92f497af352055008e2</string>
+	<string>1:978311598679:ios:fe8c1083fdea37f0d4c912</string>
 	<key>DATABASE_URL</key>
-	<string>https://samwilldoit.firebaseio.com</string>
+	<string>https://samwilldoit-cdd44.firebaseio.com</string>
 </dict>
 </plist>
