@@ -86,7 +86,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                                 ProfileButton(
                                   onPressed: () =>
                                       Navigator.pushNamed(context, "/profile"),
-                                  icon: Icons.star,
+                                  profileUrl: profileUrl,
                                   title: "Profile",
                                   rating: "4.88",
                                 ),
@@ -299,7 +299,7 @@ class _FunctionalButtonState extends State<FunctionalButton> {
               padding: EdgeInsets.all(12.0),
               child: Icon(
                 widget.icon,
-                size: 50.0,
+                size: AppConfig.size(context, 16),
                 color: Colors.white,
               )),
         ),
@@ -322,12 +322,11 @@ class _FunctionalButtonState extends State<FunctionalButton> {
 }
 
 class ProfileButton extends StatefulWidget {
-  final String title, rating;
-  final IconData icon;
+  final String title, rating, profileUrl;
   final Function() onPressed;
 
   const ProfileButton(
-      {Key key, this.title, this.rating, this.icon, this.onPressed})
+      {Key key, this.title, this.rating, this.profileUrl, this.onPressed})
       : super(key: key);
 
   @override
@@ -347,12 +346,21 @@ class _ProfileButtonState extends State<ProfileButton> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ClipOval(
-                child: Image.asset(
-                  "assets/images/default_profile.png",
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
+                child: widget.profileUrl != ""
+                    ? FadeInImage.assetNetwork(
+                        image: widget.profileUrl,
+                        placeholder: 'assets/images/default_profile.png',
+                        // "assets/images/default_profile.png",
+                        width: AppConfig.size(context, 36),
+                        height: AppConfig.size(context, 36),
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        "assets/images/default_profile.png",
+                        width: AppConfig.size(context, 36),
+                        height: AppConfig.size(context, 36),
+                        fit: BoxFit.cover,
+                      ),
               ),
               SizedBox(
                 height: 10,
@@ -370,11 +378,10 @@ class _ProfileButtonState extends State<ProfileButton> {
             ],
           ),
           Positioned(
-            left: 14,
-            top: 75,
+            left: AppConfig.size(context, 3),
+            top: AppConfig.size(context, 28),
             child: Container(
-              width: 70,
-              height: 30,
+              height: AppConfig.size(context, 11),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -383,18 +390,22 @@ class _ProfileButtonState extends State<ProfileButton> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(width: AppConfig.size(context, 5)),
                   Text(widget.rating,
                       style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
+                          color: Colors.grey,
+                          fontSize: AppConfig.size(context, 6),
                           fontWeight: FontWeight.bold)),
                   SizedBox(
                     width: 5,
                   ),
                   Icon(
-                    widget.icon,
-                    color: Colors.black,
-                    size: 16,
+                    Icons.star,
+                    color: Colors.yellow,
+                    size: AppConfig.size(context, 6),
+                  ),
+                  SizedBox(
+                    width: AppConfig.size(context, 4),
                   )
                 ],
               ),
