@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:sam_driver_app/blocs/data_bloc.dart';
+import 'package:sam_driver_app/util/map_util.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -15,10 +18,10 @@ class _MyHomePageState extends State<MyHomePage> {
   _MyHomePageState();
 
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
-  Completer<GoogleMapController> _controller = Completer();
   Map<PolylineId, Polyline> polylines = <PolylineId, Polyline>{};
   int _polylineIdCounter = 1;
   PolylineId selectedPolyline;
+  var online = true;
 
   // Values when toggling polyline color
   int colorsIndex = 0;
@@ -69,17 +72,87 @@ class _MyHomePageState extends State<MyHomePage> {
     zoom: 17.0,
   );
 
+  DataBloc dataBloc = DataBloc();
+  var profileUrl = "";
+  Completer<GoogleMapController> _completer = Completer();
+  MapUtil mapUtil = MapUtil();
+  Location _locationService = new Location();
+  LatLng currentLocation;
+  LatLng _center = LatLng(45.1975844, -122.9598339);
+  PermissionStatus _permission = PermissionStatus.denied;
+  List<Marker> _markers = List();
+  List<Polyline> routes = new List();
+  double cameraZoom = 13;
+
   @override
   void initState() {
     //_mapController.mar();
     super.initState();
+    dataBloc.getProfileImage((url) {
+      setState(() {
+        profileUrl = url;
+      });
+    });
+    initPlatformState();
+  }
+
+  initPlatformState() async {
+    _locationService.requestPermission().then((value) {
+      print(value);
+      if (value == null) {
+        _locationService.requestPermission().then((value2) {
+          _permission = value2;
+          if (_permission == PermissionStatus.granted) {
+            getLocation();
+          }
+        });
+      }
+      _permission = value;
+      if (_permission == PermissionStatus.granted) {
+        getLocation();
+      }
+      return null;
+    });
+  }
+
+  getLocation() async {
+    LocationData location;
+    location = await _locationService.getLocation();
+    Marker marker = Marker(
+      markerId: MarkerId('from_address'),
+      position: LatLng(location.latitude, location.longitude),
+      infoWindow: InfoWindow(title: 'My location'),
+    );
+    if (mounted) {
+      setState(() {
+        currentLocation = LatLng(location.latitude, location.longitude);
+        _center = LatLng(currentLocation.latitude, currentLocation.longitude);
+        _markers.add(marker);
+        moveCamera(_center);
+      });
+    }
+
+    _locationService.onLocationChanged.listen((LocationData cLoc) {
+      currentLocation = LatLng(cLoc.latitude, cLoc.longitude);
+      _center = currentLocation;
+      print(_center);
+      // if (fromLocation == null && toLocation == null) {
+      moveCamera(_center);
+      // }
+    });
+  }
+
+  void moveCamera(LatLng nPos) async {
+    final GoogleMapController controller = await _completer.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(zoom: cameraZoom, target: nPos)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
-        height: 90,
+        height: !online ? 90 : 0,
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -112,13 +185,14 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: <Widget>[
           GoogleMap(
-            polylines: Set<Polyline>.of(polylines.values),
             mapType: MapType.normal,
             initialCameraPosition: _cameraPosition,
             onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
+              _completer.complete(controller);
               //_initCameraPosition();
             },
+            markers: Set<Marker>.of(_markers),
+            polylines: Set<Polyline>.of(polylines.values),
           ),
           Positioned(
             child: Align(
@@ -141,6 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ProfileWidget(
                       onPressed: () =>
                           Navigator.pushNamed(context, '/notifications'),
+                      profileUrl: profileUrl,
                     ),
                   ],
                 ),
@@ -221,8 +296,10 @@ class _FunctionalButtonState extends State<FunctionalButton> {
 
 class ProfileWidget extends StatefulWidget {
   final Function() onPressed;
+  final String profileUrl;
 
-  const ProfileWidget({Key key, this.onPressed}) : super(key: key);
+  const ProfileWidget({Key key, this.profileUrl, this.onPressed})
+      : super(key: key);
 
   @override
   _ProfileWidgetState createState() => _ProfileWidgetState();
@@ -243,12 +320,21 @@ class _ProfileWidgetState extends State<ProfileWidget> {
           ],
         ),
         child: ClipOval(
-          child: Image.asset(
-            "assets/images/default_profile.png",
-            width: 60,
-            height: 60,
-            fit: BoxFit.cover,
-          ),
+          child: widget.profileUrl != ""
+              ? FadeInImage.assetNetwork(
+                  image: widget.profileUrl,
+                  placeholder: 'assets/images/default_profile.png',
+                  // "assets/images/default_profile.png",
+                  width: 60,
+                  height: 60,
+                  fit: BoxFit.cover,
+                )
+              : Image.asset(
+                  "assets/images/default_profile.png",
+                  width: 60,
+                  height: 60,
+                  fit: BoxFit.cover,
+                ),
         ),
       ),
     );

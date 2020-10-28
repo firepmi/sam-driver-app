@@ -109,6 +109,16 @@ class FireDataRef {
     streamSubscription.cancel();
   }
 
+  void getProfileImage(Function(String) onSuccess) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child("profile")
+        .child(user.uid + ".jpg");
+    String profileUrl = (await ref.getDownloadURL() ?? "").toString();
+    onSuccess(profileUrl);
+  }
+
   void signIn(String email, String pass, Function onSuccess,
       Function(String) onSignInError) {
     _firebaseAuth

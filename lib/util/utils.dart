@@ -47,3 +47,14 @@ class AvailableImages {
       const AssetImage('assets/images/sam_logo_transparent.png');
   static const bgWelcome = const AssetImage('assets/images/bg_welcome.png');
 }
+
+class AppIcons {
+  static const cars = [
+    'assets/svg/automobile.svg',
+    'assets/svg/suv.svg',
+    'assets/svg/pickup.svg',
+    'assets/svg/van.svg',
+    'assets/svg/trailer.svg',
+    'assets/svg/truck.svg',
+  ];
+}

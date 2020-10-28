@@ -19,4 +19,8 @@ class DataBloc {
   void uploadProfile(Uint8List data, Function onSuccess) {
     _fireData.uploadImage(data, onSuccess);
   }
+
+  void getProfileImage(Function(String) onSuccess) {
+    _fireData.getProfileImage(onSuccess);
+  }
 }

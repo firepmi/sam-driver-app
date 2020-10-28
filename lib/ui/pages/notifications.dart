@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sam_driver_app/blocs/data_bloc.dart';
+import 'package:sam_driver_app/util/utils.dart';
 
 class NotificationsPage extends StatelessWidget {
   @override
@@ -16,10 +18,17 @@ const kExpandedHeight = 300.0;
 
 class _NotificationsViewState extends State<NotificationsView> {
   ScrollController _scrollController;
-
+  DataBloc dataBloc = DataBloc();
+  String name = "Welcome! Driver";
+  var profileUrl = "";
   @override
   void initState() {
     super.initState();
+    dataBloc.getProfileImage((url) {
+      setState(() {
+        profileUrl = url;
+      });
+    });
   }
 
   @override
@@ -35,7 +44,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                 floating: false,
                 automaticallyImplyLeading: false,
                 pinned: true,
-                backgroundColor: Colors.black,
+                backgroundColor: AppColors.main,
                 leading: GestureDetector(
                   child: IconButton(
                     onPressed: () => Navigator.pop(context),
@@ -58,7 +67,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                     children: <Widget>[
                       Container(
                         height: 300,
-                        decoration: BoxDecoration(color: Colors.black),
+                        decoration: BoxDecoration(color: AppColors.main),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[

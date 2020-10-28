@@ -1,9 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:sam_driver_app/ui/pages/account.dart';
+import 'package:sam_driver_app/ui/pages/earnings.dart';
+import 'package:sam_driver_app/ui/pages/earnings_details.dart';
 import 'package:sam_driver_app/ui/pages/intro.dart';
 import 'package:sam_driver_app/ui/pages/login.dart';
+import 'package:sam_driver_app/ui/pages/notifications.dart';
 import 'package:sam_driver_app/ui/pages/privacy.dart';
+import 'package:sam_driver_app/ui/pages/promotions.dart';
+import 'package:sam_driver_app/ui/pages/recent_transactions.dart';
 import 'package:sam_driver_app/ui/pages/register.dart';
+import 'package:sam_driver_app/ui/pages/select_car_size.dart';
 import 'package:sam_driver_app/ui/pages/termsofservice.dart';
 import 'package:sam_driver_app/ui/pages/welcome.dart';
 
@@ -27,6 +34,13 @@ void main() async {
           '/home': (context) => MyHomePage(),
           '/': (context) => WelcomePage(),
           '/intro': (context) => IntroPage(),
+          '/notifications': (context) => NotificationsPage(),
+          '/earnings': (context) => EarningsPage(),
+          '/earnings_details': (context) => EarningsDetailsPage(),
+          '/recent_transactions': (context) => RecentTransactionsPage(),
+          '/account': (context) => AccountPage(),
+          '/select_car_size': (context) => SelectCarSizePage(),
+          '/promotions': (context) => PromotionsPage(),
           '/login': (context) => LoginPage(),
           '/signup': (context) => RegisterPage(),
           '/profile': (context) => ProfilePage(),
