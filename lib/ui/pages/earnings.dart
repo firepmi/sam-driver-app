@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sam_driver_app/util/utils.dart';
 
 class EarningsPage extends StatelessWidget {
   @override
@@ -32,7 +33,7 @@ class _EarningsViewState extends State<EarningsView> {
               width: MediaQuery.of(context).size.width,
               height: 280,
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: AppColors.main,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -47,7 +48,7 @@ class _EarningsViewState extends State<EarningsView> {
                             width: 10,
                           ),
                           IconButton(
-                            onPressed: ()=> Navigator.pop(context),
+                            onPressed: () => Navigator.pop(context),
                             icon: Icon(
                               Icons.keyboard_backspace,
                               color: Colors.white,

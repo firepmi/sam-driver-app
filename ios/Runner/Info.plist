@@ -20,6 +20,18 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>NSCameraUsageDescription</key>
+    <string>Please allow access to your camera to upload your profile image.</string>
+    <key>NSLocationAlwaysAndWhenInUsageDescription</key>
+    <string>SAM Drivers want know your location</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>SAM Drivers want know your location</string>
+    <key>NSLocationUsageDescription</key>
+    <string>SAM Drivers want know your location</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>SAM Drivers want know your location</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Please allow access to your picture to upload your profile image.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -41,5 +53,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+    <true/>
 </dict>
 </plist>
