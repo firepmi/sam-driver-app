@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sam_driver_app/ui/pages/account.dart';
 import 'package:sam_driver_app/ui/pages/earnings.dart';
 import 'package:sam_driver_app/ui/pages/earnings_details.dart';
+import 'package:sam_driver_app/ui/pages/edit_profile.dart';
 import 'package:sam_driver_app/ui/pages/intro.dart';
 import 'package:sam_driver_app/ui/pages/login.dart';
 import 'package:sam_driver_app/ui/pages/notifications.dart';
@@ -10,6 +11,7 @@ import 'package:sam_driver_app/ui/pages/privacy.dart';
 import 'package:sam_driver_app/ui/pages/promotions.dart';
 import 'package:sam_driver_app/ui/pages/recent_transactions.dart';
 import 'package:sam_driver_app/ui/pages/register.dart';
+import 'package:sam_driver_app/ui/pages/request_details.dart';
 import 'package:sam_driver_app/ui/pages/select_car_size.dart';
 import 'package:sam_driver_app/ui/pages/termsofservice.dart';
 import 'package:sam_driver_app/ui/pages/welcome.dart';
@@ -39,6 +41,7 @@ void main() async {
           '/earnings_details': (context) => EarningsDetailsPage(),
           '/recent_transactions': (context) => RecentTransactionsPage(),
           '/account': (context) => AccountPage(),
+          '/edit_profile': (context) => EditProfilePage(),
           '/select_car_size': (context) => SelectCarSizePage(),
           '/promotions': (context) => PromotionsPage(),
           '/login': (context) => LoginPage(),
@@ -46,6 +49,7 @@ void main() async {
           '/profile': (context) => ProfilePage(),
           '/privacy': (context) => PrivacyPage(),
           '/termsofservice': (context) => TermsOfServicePage(),
+          '/request_details': (context) => RequestDetailsPage(),
         },
       )));
 }

@@ -32,7 +32,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-    dataBloc.getUserProfile((data) {
+    dataBloc.getDriverProfile((data) {
       name = data["name"];
       if (mounted) {
         setState(() => null);
@@ -229,11 +229,16 @@ class _ProfileViewState extends State<ProfileView> {
                                     borderRadius: BorderRadius.all(
                                         const Radius.circular(4.0)),
                                   ),
-                                  child: Text('ADD DETAILS',
-                                      style: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: AppConfig.size(context, 6),
-                                          fontWeight: FontWeight.bold))),
+                                  child: InkWell(
+                                    onTap: () => Navigator.pushNamed(
+                                        context, "/edit_profile"),
+                                    child: Text('ADD DETAILS',
+                                        style: TextStyle(
+                                            color: Colors.blue,
+                                            fontSize:
+                                                AppConfig.size(context, 6),
+                                            fontWeight: FontWeight.bold)),
+                                  )),
                             ),
                             SizedBox(
                               height: 10,

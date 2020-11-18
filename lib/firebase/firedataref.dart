@@ -29,9 +29,8 @@ class FireDataRef {
     var user = {
       "name": name,
       "phone": phone,
-      "type": "driver",
     };
-    var ref = FirebaseDatabase.instance.reference().child("users");
+    var ref = FirebaseDatabase.instance.reference().child("drivers");
 
     ref.child(userId).set(user).then((user) {
       // success
@@ -74,10 +73,18 @@ class FireDataRef {
     });
   }
 
-  void getUserProfile(Function(dynamic) onSuccess) {
+  void getDriverProfile(Function(dynamic) onSuccess) {
     var user = FirebaseAuth.instance.currentUser;
     var ref =
-        FirebaseDatabase.instance.reference().child("users").child(user.uid);
+        FirebaseDatabase.instance.reference().child("drivers").child(user.uid);
+    ref.once().then((DataSnapshot data) {
+      onSuccess(data.value);
+    });
+  }
+
+  void getClientInfo(String clientId, Function(dynamic) onSuccess) {
+    var ref =
+        FirebaseDatabase.instance.reference().child("users").child(clientId);
     ref.once().then((DataSnapshot data) {
       onSuccess(data.value);
     });
@@ -85,38 +92,29 @@ class FireDataRef {
 
   void uploadImage(Uint8List data, Function onSuccess) async {
     var user = FirebaseAuth.instance.currentUser;
-    final StorageReference storageReference =
-        FirebaseStorage().ref().child("profile").child(user.uid + ".jpg");
 
-    final StorageUploadTask uploadTask = storageReference.putData(data);
-
-    final StreamSubscription<StorageTaskEvent> streamSubscription =
-        uploadTask.events.listen((event) {
-      // You can use this to notify yourself or your user in any kind of way.
-      // For example: you could use the uploadTask.events stream in a StreamBuilder instead
-      // to show your user what the current status is. In that case, you would not need to cancel any
-      // subscription as StreamBuilder handles this automatically.
-
-      // Here, every StorageTaskEvent concerning the upload is printed to the logs.
-      print('EVENT ${event.type}');
-      if (event.type == StorageTaskEventType.success) {
-        onSuccess();
-      }
-    });
-
-// Cancel your subscription when done.
-    await uploadTask.onComplete;
-    streamSubscription.cancel();
-  }
-
-  void getProfileImage(Function(String) onSuccess) async {
-    final user = FirebaseAuth.instance.currentUser;
-    final ref = FirebaseStorage.instance
+    final Reference storageReference = FirebaseStorage.instance
         .ref()
         .child("profile")
         .child(user.uid + ".jpg");
-    String profileUrl = (await ref.getDownloadURL() ?? "").toString();
-    onSuccess(profileUrl);
+
+    try {
+      await storageReference.putData(data);
+      onSuccess();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void getProfileImage(String uid, Function(String) onSuccess) async {
+    final ref =
+        FirebaseStorage.instance.ref().child("profile").child(uid + ".jpg");
+    try {
+      String profileUrl = (await ref.getDownloadURL() ?? "").toString();
+      onSuccess(profileUrl);
+    } catch (error) {
+      print(error.toString());
+    }
   }
 
   void signIn(String email, String pass, Function onSuccess,
@@ -147,6 +145,51 @@ class FireDataRef {
       default:
         onRegisterError("Signup fail, please try again");
         break;
+    }
+  }
+
+  void getRequests(Function(dynamic) onSuccess) async {
+    var ref = FirebaseDatabase.instance.reference().child("requests");
+    var uid = FirebaseAuth.instance.currentUser.uid;
+    try {
+      var data = await ref
+          .orderByChild("driver_id")
+          .equalTo(uid)
+          // .orderByChild("status")
+          // .equalTo("waiting")
+          .once();
+      Map<String, dynamic> mapOfMaps = Map.from(data.value);
+      mapOfMaps.forEach((key, value) {
+        if (value["status"] == "waiting") {
+          value["data_id"] = key;
+          onSuccess(value);
+          return;
+        }
+      });
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
+  void acceptOffer(
+      String id, Function onSuccess, Function(dynamic) onError) async {
+    var ref = FirebaseDatabase.instance.reference().child("requests");
+    try {
+      await ref.child(id).child("status").set("accepted");
+      onSuccess();
+    } catch (error) {
+      onError(error.toString());
+    }
+  }
+
+  void rejectOffer(
+      String id, Function onSuccess, Function(dynamic) onError) async {
+    var ref = FirebaseDatabase.instance.reference().child("requests");
+    try {
+      await ref.child(id).child("status").set("rejected");
+      onSuccess();
+    } catch (error) {
+      onError(error.toString());
     }
   }
 }

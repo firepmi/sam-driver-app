@@ -17,7 +17,7 @@ class _HomeMenuDrawerState extends State<HomeMenuDrawer> {
   @override
   void initState() {
     super.initState();
-    dataBloc.getUserProfile((data) {
+    dataBloc.getDriverProfile((data) {
       name = data["name"];
       if (mounted) {
         setState(() => null);

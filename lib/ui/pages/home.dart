@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:sam_driver_app/blocs/data_bloc.dart';
+import 'package:sam_driver_app/util/globals.dart';
 import 'package:sam_driver_app/util/map_util.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -83,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Marker> _markers = List();
   List<Polyline> routes = new List();
   double cameraZoom = 13;
-
+  Timer timer;
   @override
   void initState() {
     //_mapController.mar();
@@ -148,8 +149,27 @@ class _MyHomePageState extends State<MyHomePage> {
         CameraPosition(zoom: cameraZoom, target: nPos)));
   }
 
+  void checkMyRequests() {
+    if (timer == null || !timer.isActive) {
+      timer = Timer.periodic(Duration(seconds: 5), (timer) {
+        print("is Waiting : ${Globals.isWaiting}");
+        if (!Globals.isWaiting)
+          timer.cancel();
+        else {
+          dataBloc.getRequests(onRequestResults);
+        }
+      });
+    }
+  }
+
+  void onRequestResults(dynamic data) {
+    Globals.isWaiting = false;
+    Navigator.pushNamed(context, '/request_details', arguments: data);
+  }
+
   @override
   Widget build(BuildContext context) {
+    checkMyRequests();
     return Scaffold(
       bottomNavigationBar: Container(
         height: !online ? 90 : 0,
@@ -366,21 +386,24 @@ class _PriceWidgetState extends State<PriceWidget> {
               color: Colors.grey, blurRadius: 11, offset: Offset(3.0, 4.0))
         ],
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text("\$",
-              style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold)),
-          Text(widget.price,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold)),
-        ],
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(context, "/earnings"),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text("\$",
+                style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold)),
+            Text(widget.price,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold)),
+          ],
+        ),
       ),
     );
   }

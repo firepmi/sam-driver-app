@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sam_driver_app/util/utils.dart';
 
 class RecentTransactionsPage extends StatelessWidget {
   @override
@@ -22,7 +23,7 @@ class _RecentTransactionsViewState extends State<RecentTransactionsView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: AppColors.main,
           title: Text("Activity"),
           actions: <Widget>[
             IconButton(
@@ -118,20 +119,40 @@ class _RecentTransactionsViewState extends State<RecentTransactionsView> {
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 30,),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text("UberX", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-                      Text("\$3.60", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                      Text(
+                        "UberX",
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "\$3.60",
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text("Sep 19, 10:13 PM", style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),),
-                      Text("\$3.60", style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),),
+                      Text(
+                        "Sep 19, 10:13 PM",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.normal),
+                      ),
+                      Text(
+                        "\$3.60",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.normal),
+                      ),
                     ],
                   ),
                 ],
