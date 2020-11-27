@@ -171,6 +171,29 @@ class FireDataRef {
     }
   }
 
+  void saveAboutMe(
+      String aboutMe, Function onSuccess, Function(dynamic) onError) async {
+    var ref = FirebaseDatabase.instance.reference().child("drivers");
+    var uid = FirebaseAuth.instance.currentUser.uid;
+    try {
+      await ref.child(uid).child("aboutme").set(aboutMe);
+      onSuccess();
+    } catch (error) {
+      onError(error.toString());
+    }
+  }
+
+  Future<String> getAboutMe() async {
+    var ref = FirebaseDatabase.instance.reference().child("drivers");
+    var uid = FirebaseAuth.instance.currentUser.uid;
+    try {
+      var aboutme = await ref.child(uid).child("aboutme").once();
+      return aboutme.value;
+    } catch (error) {
+      return null;
+    }
+  }
+
   void acceptOffer(
       String id, Function onSuccess, Function(dynamic) onError) async {
     var ref = FirebaseDatabase.instance.reference().child("requests");

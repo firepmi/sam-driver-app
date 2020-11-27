@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,12 +29,19 @@ class _ProfileViewState extends State<ProfileView> {
   var rating = "-";
   File _image;
   final picker = ImagePicker();
-
+  final aboutMeController = TextEditingController();
+  var isEditable = false;
   @override
   void initState() {
     super.initState();
     dataBloc.getDriverProfile((data) {
       name = data["name"];
+      if (data["aboutme"] == null) {
+        isEditable = false;
+      } else {
+        isEditable = true;
+        aboutMeController.text = data["aboutme"];
+      }
       if (mounted) {
         setState(() => null);
       }
@@ -111,6 +119,24 @@ class _ProfileViewState extends State<ProfileView> {
     });
   }
 
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushNamed(context, '/login');
+  }
+
+  void saveAboutMe() {
+    dataBloc.saveAboutMe(aboutMeController.text, () {
+      print("about me saved");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Successfully saved!"),
+        ),
+      );
+    }, (error) {
+      print(error);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -125,6 +151,18 @@ class _ProfileViewState extends State<ProfileView> {
               leading: FlatButton(
                   onPressed: () => Navigator.pop(context),
                   child: Icon(Icons.arrow_back, size: 26, color: Colors.white)),
+              actions: [
+                Padding(
+                  padding: EdgeInsets.only(right: 15),
+                  child: InkWell(
+                    onTap: signOut,
+                    child: Icon(
+                      Icons.logout,
+                      size: 26.0,
+                    ),
+                  ),
+                )
+              ],
             ),
             body: Container(
               decoration: BoxDecoration(
@@ -201,50 +239,118 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                         ),
                         Divider(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(
-                              height: AppConfig.size(context, 6),
-                            ),
-                            Text(
-                              "Tell customers a little about yourself",
-                              style: TextStyle(
-                                  fontSize: AppConfig.size(context, 7)),
-                            ),
-                            SizedBox(
-                              height: AppConfig.size(context, 10),
-                            ),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                  width: AppConfig.size(context, 80),
-                                  height: AppConfig.size(context, 20),
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  alignment: FractionalOffset.center,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.blue, width: 2),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                        const Radius.circular(4.0)),
+                        SizedBox(height: 20),
+                        isEditable
+                            ? Column(
+                                children: [
+                                  Center(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.grey[300], width: 1),
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            const Radius.circular(4.0)),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(30.0),
+                                        child: Container(
+                                          height: AppConfig.size(context, 44),
+                                          width: AppConfig.size(context, 200),
+                                          child: TextField(
+                                            controller: aboutMeController,
+                                            maxLength: 500,
+                                            maxLines: 10,
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    "Tell customers a little about yourself"),
+                                            onChanged: (text) {
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  child: InkWell(
-                                    onTap: () => Navigator.pushNamed(
-                                        context, "/edit_profile"),
-                                    child: Text('ADD DETAILS',
-                                        style: TextStyle(
-                                            color: Colors.blue,
-                                            fontSize:
-                                                AppConfig.size(context, 6),
-                                            fontWeight: FontWeight.bold)),
-                                  )),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
+                                  SizedBox(height: 20),
+                                  GestureDetector(
+                                    onTap: saveAboutMe,
+                                    child: Container(
+                                        width: AppConfig.size(context, 80),
+                                        height: AppConfig.size(context, 20),
+                                        margin: EdgeInsets.only(bottom: 10),
+                                        alignment: FractionalOffset.center,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.blue, width: 2),
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              const Radius.circular(4.0)),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            // Navigator.pushNamed(context, "/edit_profile");
+                                            isEditable = true;
+                                            setState(() {});
+                                          },
+                                          child: Text('Save',
+                                              style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: AppConfig.size(
+                                                      context, 6),
+                                                  fontWeight: FontWeight.bold)),
+                                        )),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: AppConfig.size(context, 6),
+                                  ),
+                                  Text(
+                                    "Tell customers a little about yourself",
+                                    style: TextStyle(
+                                        fontSize: AppConfig.size(context, 7)),
+                                  ),
+                                  SizedBox(
+                                    height: AppConfig.size(context, 10),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                        width: AppConfig.size(context, 80),
+                                        height: AppConfig.size(context, 20),
+                                        margin: EdgeInsets.only(bottom: 10),
+                                        alignment: FractionalOffset.center,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.blue, width: 2),
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              const Radius.circular(4.0)),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            // Navigator.pushNamed(context, "/edit_profile");
+                                            isEditable = true;
+                                            setState(() {});
+                                          },
+                                          child: Text('ADD DETAILS',
+                                              style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: AppConfig.size(
+                                                      context, 6),
+                                                  fontWeight: FontWeight.bold)),
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              ),
+                        SizedBox(height: 20),
                         Divider(),
                         Padding(
                           padding: EdgeInsets.all(20),

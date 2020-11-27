@@ -34,6 +34,16 @@ class DataBloc {
     _fireData.getClientInfo(clientId, onSuccess);
   }
 
+  Future<String> getAboutMe() async {
+    var aboutMe = await _fireData.getAboutMe();
+    return aboutMe;
+  }
+
+  void saveAboutMe(
+      String aboutMe, Function onSuccess, Function(dynamic) onError) {
+    _fireData.saveAboutMe(aboutMe, onSuccess, onError);
+  }
+
   void acceptOffer(String id, Function onSuccess, Function(dynamic) onError) {
     _fireData.acceptOffer(id, onSuccess, onError);
   }

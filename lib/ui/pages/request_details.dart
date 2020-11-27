@@ -10,6 +10,7 @@ import 'package:sam_driver_app/blocs/data_bloc.dart';
 import 'package:sam_driver_app/util/globals.dart';
 import 'package:sam_driver_app/util/map_util.dart';
 import 'package:sam_driver_app/util/utils.dart';
+import 'package:intl/intl.dart';
 
 class RequestDetailsPage extends StatefulWidget {
   RequestDetailsPage({Key key, this.title}) : super(key: key);
@@ -36,11 +37,13 @@ class _RequestDetailsPageState extends State<RequestDetailsPage> {
   List<LatLng> path = List();
   BitmapDescriptor destinationPinIcon;
   Timer timer;
+  final oCcy = new NumberFormat("#,##0.00", "en_US");
   dynamic data;
   dynamic clientData;
   var clientProfileUrl = "";
   var isDone = false;
   var isInited = false;
+
   @override
   void initState() {
     super.initState();
@@ -275,7 +278,7 @@ class _RequestDetailsPageState extends State<RequestDetailsPage> {
                     Divider(),
                     SizedBox(height: 10),
                     AppStyle.label(context,
-                        "Price: \$${data != null ? data['price'] : ''} ",
+                        "Price: \$${oCcy.format((data != null ? data['price'] : 0).toDouble())} ",
                         top: 0, bottom: 20, left: 20, right: 20),
                     AppStyle.label(context,
                         "Car Size: ${Globals.carNames[data != null ? data['car_size'] : 0]} ",
