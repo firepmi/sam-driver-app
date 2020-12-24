@@ -127,7 +127,7 @@ class _ProfileViewState extends State<ProfileView> {
   void saveAboutMe() {
     dataBloc.saveAboutMe(aboutMeController.text, () {
       print("about me saved");
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text("Successfully saved!"),
         ),
