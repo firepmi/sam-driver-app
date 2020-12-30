@@ -5,6 +5,7 @@ import 'package:location/location.dart';
 import 'package:sam_driver_app/blocs/data_bloc.dart';
 import 'package:sam_driver_app/util/globals.dart';
 import 'package:sam_driver_app/util/map_util.dart';
+import 'package:sam_driver_app/util/utils.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -85,6 +86,24 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Polyline> routes = new List();
   double cameraZoom = 13;
   Timer timer;
+  var isStarted = false;
+
+  int currentSeconds = 0;
+  String get timerText =>
+      '${(currentSeconds ~/ 60).toString().padLeft(2, '0')}: ${(currentSeconds % 60).toString().padLeft(2, '0')}';
+
+  startTimeout() {
+    final interval = const Duration(seconds: 1);
+    var duration = interval;
+    Timer.periodic(duration, (timer) {
+      setState(() {
+        print(timer.tick);
+        currentSeconds = timer.tick;
+        if (!isStarted) timer.cancel();
+      });
+    });
+  }
+
   @override
   void initState() {
     //_mapController.mar();
@@ -217,28 +236,39 @@ class _MyHomePageState extends State<MyHomePage> {
           Positioned(
             child: Align(
               alignment: Alignment.topCenter,
-              child: Container(
-                margin: EdgeInsets.only(top: 30),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    FunctionalButton(
-                      icon: Icons.search,
-                      title: "",
-                      onPressed: () {},
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 30),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        FunctionalButton(
+                          icon: Icons.search,
+                          title: "",
+                          onPressed: () {},
+                        ),
+                        PriceWidget(
+                          price: "0.00",
+                          onPressed: () {},
+                        ),
+                        ProfileWidget(
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/notifications'),
+                          profileUrl: profileUrl,
+                        ),
+                      ],
                     ),
-                    PriceWidget(
-                      price: "0.00",
-                      onPressed: () {},
-                    ),
-                    ProfileWidget(
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/notifications'),
-                      profileUrl: profileUrl,
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 20),
+                  // Text(
+                  //   timerText,
+                  //   style: TextStyle(fontFamily: 'Seven-Segment'),
+                  // )
+                  AppStyle.label(context, timerText,
+                      fontFamily: 'Seven-Segment', size: 20),
+                ],
               ),
             ),
           ),
@@ -257,8 +287,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () {},
                     ),
                     GoButton(
-                      title: "GO",
-                      onPressed: () {},
+                      started: isStarted,
+                      onPressed: () {
+                        setState(() {
+                          isStarted = !isStarted;
+                          if (isStarted) {
+                            startTimeout();
+                          }
+                        });
+                      },
                     ),
                     Container(
                       width: 50,
@@ -379,7 +416,7 @@ class _PriceWidgetState extends State<PriceWidget> {
       height: 60,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white, width: 4),
-        color: Colors.black,
+        color: AppColors.main,
         borderRadius: BorderRadius.all(Radius.circular(50.0)),
         boxShadow: [
           BoxShadow(
@@ -394,7 +431,7 @@ class _PriceWidgetState extends State<PriceWidget> {
           children: <Widget>[
             Text("\$",
                 style: TextStyle(
-                    color: Colors.green,
+                    color: Colors.white,
                     fontSize: 26,
                     fontWeight: FontWeight.bold)),
             Text(widget.price,
@@ -410,10 +447,10 @@ class _PriceWidgetState extends State<PriceWidget> {
 }
 
 class GoButton extends StatefulWidget {
-  final String title;
   final Function() onPressed;
+  final bool started;
 
-  const GoButton({Key key, this.title, this.onPressed}) : super(key: key);
+  const GoButton({Key key, this.started, this.onPressed}) : super(key: key);
 
   @override
   _GoButtonState createState() => _GoButtonState();
@@ -429,26 +466,36 @@ class _GoButtonState extends State<GoButton> {
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.blue, width: 10),
-              shape: BoxShape.circle),
+              border: Border.all(
+                  color: widget.started ? AppColors.main : Colors.red,
+                  width: 10),
+              borderRadius: BorderRadius.all(Radius.circular(30))
+              // shape: BoxShape.circle,
+              ),
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white, width: 2),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
             child: RawMaterialButton(
               onPressed: widget.onPressed,
               splashColor: Colors.black,
-              fillColor: Colors.blue,
+              fillColor: widget.started ? AppColors.main : Colors.red,
               elevation: 15.0,
-              shape: CircleBorder(),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
               child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(widget.title,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28))),
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  widget.started ? "End Shift" : "Start Shift",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
             ),
           ),
         ),

@@ -56,13 +56,15 @@ class AppStyle {
     double bottom = 0,
     double right = 0,
     double left = 0,
+    String fontFamily,
   }) {
     return Padding(
       padding:
           EdgeInsets.only(top: top, bottom: bottom, right: right, left: left),
       child: Text(
         text,
-        style: TextStyle(fontSize: AppConfig.size(context, size)),
+        style: TextStyle(
+            fontSize: AppConfig.size(context, size), fontFamily: fontFamily),
       ),
     );
   }

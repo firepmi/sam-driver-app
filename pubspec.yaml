@@ -47,3 +47,8 @@ flutter:
     - assets/pdf/privacy.pdf
     - assets/pdf/termsofservice.pdf
     - assets/svg/
+
+  fonts:
+    - family: Seven-Segment
+      fonts:
+        - asset: assets/fonts/Seven-Segment.ttf
