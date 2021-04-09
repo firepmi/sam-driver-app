@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:sam_driver_app/blocs/auth_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:sam_driver_app/ui/widgets/loading_dialog.dart';
 import 'package:sam_driver_app/ui/widgets/msg_dialog.dart';
 import 'package:sam_driver_app/util/utils.dart';
@@ -17,6 +20,11 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
+  TextEditingController _carMakeController = TextEditingController();
+  TextEditingController _carModelController = TextEditingController();
+  TextEditingController _carYearController = TextEditingController();
+  TextEditingController _carColorController = TextEditingController();
+  TextEditingController _carTagController = TextEditingController();
 
   @override
   void dispose() {
@@ -118,6 +126,86 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         labelStyle: TextStyle(fontSize: 20))),
               ),
+              StreamBuilder(
+                stream: authBloc.carMakeStream,
+                builder: (context, snapshot) => TextField(
+                    controller: _carMakeController,
+                    style: TextStyle(fontSize: 18),
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        errorText: snapshot.hasError ? snapshot.error : null,
+                        border: InputBorder.none,
+                        labelText: "Make",
+                        prefixIcon: Container(
+                          width: 50,
+                          child: Icon(Icons.query_builder),
+                        ),
+                        labelStyle: TextStyle(fontSize: 20))),
+              ),
+              StreamBuilder(
+                stream: authBloc.carModelStream,
+                builder: (context, snapshot) => TextField(
+                    controller: _carModelController,
+                    style: TextStyle(fontSize: 18),
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        errorText: snapshot.hasError ? snapshot.error : null,
+                        border: InputBorder.none,
+                        labelText: "Model",
+                        prefixIcon: Container(
+                          width: 50,
+                          child: Icon(Icons.model_training),
+                        ),
+                        labelStyle: TextStyle(fontSize: 20))),
+              ),
+              StreamBuilder(
+                stream: authBloc.carYearStream,
+                builder: (context, snapshot) => TextField(
+                    controller: _carYearController,
+                    style: TextStyle(fontSize: 18),
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                        errorText: snapshot.hasError ? snapshot.error : null,
+                        border: InputBorder.none,
+                        labelText: "Year",
+                        prefixIcon: Container(
+                          width: 50,
+                          child: Icon(Icons.build),
+                        ),
+                        labelStyle: TextStyle(fontSize: 20))),
+              ),
+              StreamBuilder(
+                stream: authBloc.carColorStream,
+                builder: (context, snapshot) => TextField(
+                    controller: _carColorController,
+                    style: TextStyle(fontSize: 18),
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        errorText: snapshot.hasError ? snapshot.error : null,
+                        border: InputBorder.none,
+                        labelText: "Car Color",
+                        prefixIcon: Container(
+                          width: 50,
+                          child: Icon(Icons.color_lens),
+                        ),
+                        labelStyle: TextStyle(fontSize: 20))),
+              ),
+              StreamBuilder(
+                stream: authBloc.carTagStream,
+                builder: (context, snapshot) => TextField(
+                    controller: _carTagController,
+                    style: TextStyle(fontSize: 18),
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        errorText: snapshot.hasError ? snapshot.error : null,
+                        border: InputBorder.none,
+                        labelText: "Tag number",
+                        prefixIcon: Container(
+                          width: 50,
+                          child: Icon(Icons.tag),
+                        ),
+                        labelStyle: TextStyle(fontSize: 20))),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                 child: SizedBox(
@@ -182,16 +270,62 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _onSignupClicked() {
-    var isValid = authBloc.isValid(_nameController.text, _emailController.text,
-        _passController.text, _phoneController.text);
+  Future<void> _verifyAccountDetails(String name) async {
+    LoadgingDialog.showLoadingDialog(context, "Loading...");
+
+    setState(() {});
+
+    String valueURL = AppConfig.checkingURL +
+        "firstname=" +
+        name +
+        "&lastname=" +
+        name +
+        "&apikey=" +
+        AppConfig.checkingKey;
+
+    var res = await http.get(valueURL, headers: null);
+    if (res.statusCode == 200) {
+      var data = jsonDecode(res.body);
+
+      if (data["person"].length == 0) {
+        _signUp();
+      } else {
+        LoadgingDialog.hideLoadingDialog(context);
+        MsgDialog.showMsgDialog(
+            context, "Oops.", "You can't register at this time");
+      }
+    } else {
+      LoadgingDialog.hideLoadingDialog(context);
+      MsgDialog.showMsgDialog(context, "Oops.", "Server error");
+    }
+  }
+
+  void _signUp() {
+    var isValid = authBloc.isValid(
+        _nameController.text,
+        _emailController.text,
+        _passController.text,
+        _phoneController.text,
+        _carMakeController.text,
+        _carModelController.text,
+        _carYearController.text,
+        _carColorController.text,
+        _carTagController.text);
     print(isValid);
     if (isValid) {
       // create user
       //loading dialog
-      LoadgingDialog.showLoadingDialog(context, "Loading...");
-      return authBloc.signUp(_emailController.text, _passController.text,
-          _phoneController.text, _nameController.text, () {
+      // LoadgingDialog.showLoadingDialog(context, "Loading...");
+      return authBloc.signUp(
+          _emailController.text,
+          _passController.text,
+          _phoneController.text,
+          _nameController.text,
+          _carMakeController.text,
+          _carModelController.text,
+          _carYearController.text,
+          _carColorController.text,
+          _carTagController.text, () {
         LoadgingDialog.hideLoadingDialog(context);
         Navigator.pushNamed(context, '/home');
       }, (msg) {
@@ -201,6 +335,11 @@ class _RegisterPageState extends State<RegisterPage> {
         MsgDialog.showMsgDialog(context, "SignUp", msg);
       });
     }
+  }
+
+  void _onSignupClicked() {
+    _verifyAccountDetails(_nameController.text);
+
     return;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sam_driver_app/ui/pages/account.dart';
+import 'package:sam_driver_app/ui/pages/chat.dart';
 import 'package:sam_driver_app/ui/pages/earnings.dart';
 import 'package:sam_driver_app/ui/pages/earnings_details.dart';
 import 'package:sam_driver_app/ui/pages/edit_profile.dart';
@@ -12,6 +13,7 @@ import 'package:sam_driver_app/ui/pages/promotions.dart';
 import 'package:sam_driver_app/ui/pages/recent_transactions.dart';
 import 'package:sam_driver_app/ui/pages/register.dart';
 import 'package:sam_driver_app/ui/pages/request_details.dart';
+import 'package:sam_driver_app/ui/pages/requests_list.dart';
 import 'package:sam_driver_app/ui/pages/select_car_size.dart';
 import 'package:sam_driver_app/ui/pages/termsofservice.dart';
 import 'package:sam_driver_app/ui/pages/welcome.dart';
@@ -49,7 +51,9 @@ void main() async {
           '/profile': (context) => ProfilePage(),
           '/privacy': (context) => PrivacyPage(),
           '/termsofservice': (context) => TermsOfServicePage(),
-          '/request_details': (context) => RequestDetailsPage(),
+          // '/request_details': (context) => RequestDetailsPage(),
+          '/request_lists': (context) => RequestsListPage(),
+          '/chat': (context) => Chat(),
         },
       )));
 }

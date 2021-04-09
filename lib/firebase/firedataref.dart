@@ -9,14 +9,24 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class FireDataRef {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  void signUp(String email, String pass, String name, String phone,
-      Function onSuccess, Function(String) onRegisterError) {
+  void signUp(
+      String email,
+      String pass,
+      String name,
+      String phone,
+      String make,
+      String model,
+      String year,
+      String color,
+      String tag,
+      Function onSuccess,
+      Function(String) onRegisterError) {
     _firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: pass)
         .then((credentials) {
       //
-      _createUser(
-          credentials.user.uid, name, phone, onSuccess, onRegisterError);
+      _createUser(credentials.user.uid, name, phone, make, model, year, color,
+          tag, onSuccess, onRegisterError);
       print(credentials);
     }).catchError((err) {
       print(err);
@@ -24,11 +34,25 @@ class FireDataRef {
     });
   }
 
-  _createUser(String userId, String name, String phone, Function onSuccess,
+  _createUser(
+      String userId,
+      String name,
+      String phone,
+      String make,
+      String model,
+      String year,
+      String color,
+      String tag,
+      Function onSuccess,
       Function(String) onRegisterError) {
     var user = {
       "name": name,
       "phone": phone,
+      "make": make,
+      "model": model,
+      "year": year,
+      "color": color,
+      "tag": tag,
     };
     var ref = FirebaseDatabase.instance.reference().child("drivers");
 
@@ -90,10 +114,20 @@ class FireDataRef {
     });
   }
 
+  void setLocation(double lat, double long) {
+    var user = FirebaseAuth.instance.currentUser;
+
+    var ref = FirebaseDatabase.instance.reference().child("drivers");
+
+    var request = {"lat": lat, "long": long};
+
+    ref.child(user.uid).update(request);
+  }
+
   void uploadImage(Uint8List data, Function onSuccess) async {
     var user = FirebaseAuth.instance.currentUser;
 
-    final Reference storageReference = FirebaseStorage.instance
+    final StorageReference storageReference = FirebaseStorage.instance
         .ref()
         .child("profile")
         .child(user.uid + ".jpg");
@@ -158,14 +192,51 @@ class FireDataRef {
           // .orderByChild("status")
           // .equalTo("waiting")
           .once();
+
+      List<Map> maps = [];
+
+      if (data.value != null) {
+        Map<String, dynamic> mapOfMaps = Map.from(data.value);
+        mapOfMaps.forEach((key, value) {
+          if (value["status"] == "accepted") {
+            value["data_id"] = key;
+            maps.add(value);
+          }
+        });
+      }
+
+      onSuccess(maps);
+
+      return;
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
+  void getAllRequests(Function(dynamic) onSuccess) async {
+    var ref = FirebaseDatabase.instance.reference().child("requests");
+    var uid = FirebaseAuth.instance.currentUser.uid;
+    try {
+      var data = await ref
+          .orderByChild("driver_id")
+          .equalTo(uid)
+          // .orderByChild("status")
+          // .equalTo("waiting")
+          .once();
+
       Map<String, dynamic> mapOfMaps = Map.from(data.value);
+      List<Map> maps = [];
+
       mapOfMaps.forEach((key, value) {
-        if (value["status"] == "waiting") {
-          value["data_id"] = key;
-          onSuccess(value);
-          return;
-        }
+        // if (value["status"] == "accepted") {
+        value["data_id"] = key;
+        maps.add(value);
+        // }
       });
+
+      onSuccess(maps);
+
+      return;
     } catch (error) {
       print(error.toString());
     }
@@ -210,6 +281,17 @@ class FireDataRef {
     var ref = FirebaseDatabase.instance.reference().child("requests");
     try {
       await ref.child(id).child("status").set("rejected");
+      onSuccess();
+    } catch (error) {
+      onError(error.toString());
+    }
+  }
+
+  void completedOffer(
+      String id, Function onSuccess, Function(dynamic) onError) async {
+    var ref = FirebaseDatabase.instance.reference().child("requests");
+    try {
+      await ref.child(id).child("status").set("completed");
       onSuccess();
     } catch (error) {
       onError(error.toString());

@@ -11,10 +11,12 @@
     <uses-permission android:name="android.hardware.location.gps" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="sam_driver_app"
         android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="false"
         android:requestLegacyExternalStorage="true"
         tools:ignore="UnusedAttribute">
         <activity
@@ -52,6 +54,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB94toBjU5Ne7fz3xfjjS1PsgwaCabFKXg"/>
+            android:value="AIzaSyAbRCVWQX08-nVMs90K_kzsn2lzt3xgtYk"/>
     </application>
 </manifest>

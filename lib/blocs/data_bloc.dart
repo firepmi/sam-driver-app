@@ -21,6 +21,10 @@ class DataBloc {
     _fireData.uploadImage(data, onSuccess);
   }
 
+  void setLocation(double lat, double long) {
+    _fireData.setLocation(lat, long);
+  }
+
   void getProfileImage(Function(String) onSuccess, {String uid = ""}) {
     if (uid == "") uid = FirebaseAuth.instance.currentUser.uid;
     _fireData.getProfileImage(uid, onSuccess);
@@ -28,6 +32,10 @@ class DataBloc {
 
   void getRequests(Function(dynamic) onSuccess) async {
     _fireData.getRequests(onSuccess);
+  }
+
+  void getAllRequests(Function(dynamic) onSuccess) async {
+    _fireData.getAllRequests(onSuccess);
   }
 
   void getClientInfo(String clientId, Function(dynamic) onSuccess) async {
@@ -50,5 +58,10 @@ class DataBloc {
 
   void rejectOffer(String id, Function onSuccess, Function(dynamic) onError) {
     _fireData.rejectOffer(id, onSuccess, onError);
+  }
+
+  void completedOffer(
+      String id, Function onSuccess, Function(dynamic) onError) {
+    _fireData.completedOffer(id, onSuccess, onError);
   }
 }

@@ -91,10 +91,10 @@ class _NotificationsViewState extends State<NotificationsView> {
                                   rating: "4.88",
                                 ),
                                 FunctionalButton(
-                                  icon: Icons.settings,
-                                  title: "Account",
-                                  onPressed: () =>
-                                      Navigator.pushNamed(context, "/account"),
+                                  icon: Icons.history,
+                                  title: "Past Jobs",
+                                  onPressed: () => Navigator.pushNamed(
+                                      context, "/request_lists"),
                                 ),
                               ],
                             ),

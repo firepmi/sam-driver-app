@@ -12,6 +12,8 @@ import 'package:sam_driver_app/util/map_util.dart';
 import 'package:sam_driver_app/util/utils.dart';
 import 'package:intl/intl.dart';
 
+import 'chat.dart';
+
 class RequestDetailsPage extends StatefulWidget {
   RequestDetailsPage({Key key, this.title}) : super(key: key);
   final String title;
@@ -129,6 +131,16 @@ class _RequestDetailsPageState extends State<RequestDetailsPage> {
         ],
       );
     });
+  }
+
+  void onChat() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Chat(
+              peerId: data["client_id"],
+              peerAvatar: clientProfileUrl,
+            )));
   }
 
   void onReject() {
@@ -293,11 +305,21 @@ class _RequestDetailsPageState extends State<RequestDetailsPage> {
                             child: AppStyle.button(context, "Reject",
                                 fillColor: Colors.red, onPressed: onReject)),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
+            Container(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child:
+                AppStyle.button(context, "Chatting with Rider",
+                    fillColor: AppColors.main,
+                    onPressed: onChat),
+              ),
+            ),
+            SizedBox(height: 12)
           ],
         ));
   }
