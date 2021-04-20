@@ -130,7 +130,7 @@ class _LoginViewState extends State<LoginView> {
                       'Do not have account?',
                       style: TextStyle(color: Colors.grey, fontSize: 16),
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/signup');
                       },

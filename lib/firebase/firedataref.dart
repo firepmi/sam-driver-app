@@ -127,7 +127,7 @@ class FireDataRef {
   void uploadImage(Uint8List data, Function onSuccess) async {
     var user = FirebaseAuth.instance.currentUser;
 
-    final StorageReference storageReference = FirebaseStorage.instance
+    final Reference storageReference = FirebaseStorage.instance
         .ref()
         .child("profile")
         .child(user.uid + ".jpg");

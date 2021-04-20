@@ -283,7 +283,7 @@ class _RegisterPageState extends State<RegisterPage> {
         "&apikey=" +
         AppConfig.checkingKey;
 
-    var res = await http.get(valueURL, headers: null);
+    var res = await http.get(Uri.parse(valueURL), headers: null);
     if (res.statusCode == 200) {
       var data = jsonDecode(res.body);
 

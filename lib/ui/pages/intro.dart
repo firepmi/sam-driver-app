@@ -167,8 +167,9 @@ class IntroScreenState extends State<IntroPage> {
         this.goToTab = refFunc;
       },
 
+      hideStatusBar: true,
       // Show or hide status bar
-      shouldHideStatusBar: true,
+      // shouldHideStatusBar: true,
 
       // On tab change completed
       onTabChangeCompleted: this.onTabChangeCompleted,
